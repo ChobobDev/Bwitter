@@ -1,10 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
+import AppRouter from './Router';
+import {authService} from "../huobase";
 
 
 function App() {
-  return (
-    <div className="App">
-    </div>
+  // will handle all the logics
+  const [isLoggedIn, setIsLoggedIn] = useState(authService.currentUser);
+  return(<>
+  <AppRouter isLoggedIn={isLoggedIn}/>
+  <footer>&copy; {new Date().getFullYear()} Bwitter</footer>
+  </>
   );
 }
 
