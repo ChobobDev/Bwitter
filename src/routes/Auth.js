@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { authService } from "huobase";
+import { authService, firebaseInstance } from "huobase";
 
 const Auth = () => {
     const [email,setEmail] = useState(""); //이메일에 관한 State
@@ -29,6 +29,20 @@ const Auth = () => {
     };
 
     const toggleAccount = () => setNewAccount((prev) => !prev);
+    const onSocialClick = async (event) =>{
+        //es6
+        const {
+            target:{name},
+        } = event;
+        let provider;
+        if(name=== "google"){
+            provider = new firebaseInstance.auth.GoogleAuthProvider();
+        }else if(name==="github"){
+            provider = new firebaseInstance.auth.GithubAuthProvider();
+        }
+        await authService.signInWithPopup(provider);
+        
+    }
 
 
     return (
@@ -59,8 +73,8 @@ const Auth = () => {
     <span onClick={toggleAccount}>{newAccount ? "Sign In" : "Create Account"}</span>
 
             <div>
-                <button> Continue with Google</button>
-                <button> Continue with Github</button>
+                <button onClick={onSocialClick} name="google"> Continue with Google</button>
+                <button onClick={onSocialClick} name="github"> Continue with Github</button>
             </div>
         </div>
     );
