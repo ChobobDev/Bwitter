@@ -1,28 +1,31 @@
-import React, {useState, useEffect} from 'react';
-import AppRouter from './Router';
-import {authService} from "../huobase";
-
+import React, { useState, useEffect } from "react";
+import AppRouter from "components/Router";
+import { authService } from "huobase";
 
 function App() {
-  const [init,setInit] = useState(false);
-  // will handle all the logics
+  const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(()=> {
+  const [userObj, setUserObj] = useState(null);
+  useEffect(() => {
     authService.onAuthStateChanged((user) => {
-      if(user){
+      if (user) {
         setIsLoggedIn(true);
+        setUserObj(user);
       } else {
         setIsLoggedIn(false);
       }
       setInit(true);
-
     });
-  },[]);
+  }, []);
   return (
-  <>
-    {init ? <AppRouter isLoggedIn={isLoggedIn}/> : "Initializing" }
-    <footer>&copy; {new Date().getFullYear()} Bwitter</footer>
-  </>
+    <>
+      {init ? (
+        <AppRouter isLoggedIn={isLoggedIn} userObj={userObj} />
+      ) : (
+        "Initializing..."
+      )}
+      <footer>&copy; {new Date().getFullYear()} Bwitter</footer>
+    </>
   );
 }
 

@@ -1,13 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { dbService } from "huobase";
 
-const Home = () => {
+const Home = ({ userObj }) => {
   const [bweet, setBweet] = useState("");
+  const [bweets, setBweets] = useState([]);
+  useEffect(() => {
+    dbService.collection("bweets").onSnapshot((snapshot) => {
+      const bweetArray = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setBweets(bweetArray);
+    });
+  }, []);
   const onSubmit = async (event) => {
     event.preventDefault();
     await dbService.collection("bweets").add({
-      bweet,
+      text: bweet,
       createdAt: Date.now(),
+      creatorId: userObj.uid,
     });
     setBweet("");
   };
@@ -29,6 +40,13 @@ const Home = () => {
         />
         <input type="submit" value="Bweet" />
       </form>
+      <div>
+        {bweets.map((bweet) => (
+          <div key={bweet.id}>
+            <h4>{bweet.text}</h4>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
