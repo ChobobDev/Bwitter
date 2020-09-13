@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { dbService } from "huobase";
+import Bweet from "components/Bweet";
 
 const Home = ({ userObj }) => {
   const [bweet, setBweet] = useState("");
@@ -42,9 +43,11 @@ const Home = ({ userObj }) => {
       </form>
       <div>
         {bweets.map((bweet) => (
-          <div key={bweet.id}>
-            <h4>{bweet.text}</h4>
-          </div>
+          <Bweet
+            key={bweet.id}
+            bweetObj={bweet}
+            isOwner={bweet.creatorId === userObj.uid}
+          />
         ))}
       </div>
     </div>
