@@ -5,6 +5,7 @@ import Bweet from "components/Bweet";
 const Home = ({ userObj }) => {
   const [bweet, setBweet] = useState("");
   const [bweets, setBweets] = useState([]);
+  const [attachment,setAttachment] = useState();
   useEffect(() => {
     dbService.collection("bweets").onSnapshot((snapshot) => {
       const bweetArray = snapshot.docs.map((doc) => ({
@@ -38,11 +39,17 @@ const Home = ({ userObj }) => {
     const theFile =  files[0];
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
-      
+      const {
+        currentTarget: {result},
+
+      } = finishedEvent;
+      setAttachment(result);
     }
     reader.readAsDataURL(theFile);
 
   };
+
+  const onClearAttachment = () => setAttachment(null);
 
   return (
     <div>
@@ -56,6 +63,12 @@ const Home = ({ userObj }) => {
         />
         <input type="file" accept="image/*" onChange={onFileChange}/>
         <input type="submit" value="Bweet" />
+        {attachment && (
+        <div>
+          <img src={attachment} width="50px" height="50px"/>
+          <button onClick={onClearAttachment}>Remove Attatchment</button>
+        </div>
+        )}
       </form>
       <div>
         {bweets.map((bweet) => (
