@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { dbService } from "huobase";
+import { dbService, storageService } from "huobase";
 
 const Bweet = ({ bweetObj, isOwner }) => {
   const [editing, setEditing] = useState(false);
@@ -8,6 +8,7 @@ const Bweet = ({ bweetObj, isOwner }) => {
     const ok = window.confirm("Are you sure you want to delete this bweet?");
     if (ok) {
       await dbService.doc(`bweets/${bweetObj.id}`).delete();
+      await storageService.refFromURL(nweetObj.attachmentUrl).delete();
     }
   };
   const toggleEditing = () => setEditing((prev) => !prev);
