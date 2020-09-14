@@ -8,7 +8,7 @@ const Bweet = ({ bweetObj, isOwner }) => {
     const ok = window.confirm("Are you sure you want to delete this bweet?");
     if (ok) {
       await dbService.doc(`bweets/${bweetObj.id}`).delete();
-      await storageService.refFromURL(nweetObj.attachmentUrl).delete();
+      await storageService.refFromURL(bweetObj.attachmentUrl).delete();
     }
   };
   const toggleEditing = () => setEditing((prev) => !prev);
